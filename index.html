@@ -197,6 +197,34 @@
     letter-spacing: -0.01em;
   }
   .link-box a:hover { text-decoration: underline; }
+  .copy-btn {
+    background: #1b2c4e;
+    color: var(--ink);
+    border: 1px solid #3a4f7e;
+    border-radius: 8px;
+    padding: 7px 14px;
+    font-size: 13.5px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .15s ease, border-color .15s ease;
+  }
+  .copy-btn:hover { background: #243862; border-color: var(--green); }
+  .copy-btn.copied { background: var(--green-deep); border-color: var(--green); color: #04140d; }
+
+  /* ---------- FAQ ---------- */
+  .faq { margin-top: 58px; }
+  .faq h2 { font-size: clamp(26px, 3.6vw, 38px); }
+  .faq-list { margin-top: 26px; display: grid; gap: 14px; }
+  .faq-item {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+  }
+  .faq-item h3 { font-size: 18px; margin: 0 0 8px; }
+  .faq-item p { margin: 0; color: var(--muted); font-size: 15.5px; line-height: 1.65; }
+  .faq-item p strong { color: var(--ink); }
 
   /* ---------- stats strip ---------- */
   .stats {
@@ -528,6 +556,7 @@
       <div class="link-box">
         <span>My invite link:</span>
         <a href="https://make.fun/r/3mkefe3v">https://make.fun/r/3mkefe3v</a>
+        <button class="copy-btn" type="button" data-copy="https://make.fun/r/3mkefe3v">Copy my invite link</button>
       </div>
     </div>
 
@@ -656,6 +685,32 @@
     </div>
   </section>
 
+  <!-- ======================= FAQ ======================= -->
+  <section class="faq" id="faq">
+    <p class="kicker">Questions, answered</p>
+    <h2>Before you ask.</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <h3>Is it really free?</h3>
+        <p>Yes — signing up for make.fun costs nothing. No card, no subscription, no
+        paywall between you and the bounties. You bring a wallet, pick a brief, and build.</p>
+      </div>
+      <div class="faq-item">
+        <h3>How do prizes pay out?</h3>
+        <p>Winners are paid in <strong>USDC on Solana</strong>, straight to the wallet
+        on their account. The prize for this bounty is $1,000 in total, split across
+        the top 100 entries — no tokens to convert, no points that never cash out.</p>
+      </div>
+      <div class="faq-item">
+        <h3>What counts as a verified signup?</h3>
+        <p>A signup counts when a real person creates a new make.fun account through
+        the invite link on this page — <strong>https://make.fun/r/3mkefe3v</strong> —
+        and the house's referral check verifies them. Bots, duplicate accounts and
+        idle signups never count; only verified humans move the score.</p>
+      </div>
+    </div>
+  </section>
+
   <!-- ======================= FINAL CTA ======================= -->
   <div class="final">
     <h2>Your first bounty is waiting.</h2>
@@ -683,5 +738,38 @@
   </footer>
 
 </div>
+<script>
+(function () {
+  var btn = document.querySelector('.copy-btn');
+  if (!btn) return;
+  btn.addEventListener('click', function () {
+    var text = btn.getAttribute('data-copy');
+    var done = function () {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(function () {
+        btn.textContent = 'Copy my invite link';
+        btn.classList.remove('copied');
+      }, 2000);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { fallback(); });
+    } else {
+      fallback();
+    }
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(ta);
+      done();
+    }
+  });
+})();
+</script>
 </body>
 </html>
